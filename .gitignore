@@ -3,5 +3,10 @@ package-lock.json
 dist/
 build/
 .idea/
-**/*.js
-**/*.js.map
+src/**/*.js
+src/**/*.js.map
+main-process/**/*.js
+main-process/**/*.js.map
+public/**/*.js.map
+public/**/*.js
+yarn-error.log

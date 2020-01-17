@@ -54,6 +54,10 @@
           ]
         }
       ]
+    },
+    "publish": {
+      "provider": "github",
+      "releaseType": "release"
     }
   },
   "scripts": {
@@ -94,32 +98,15 @@
     "@types/selenium-webdriver": "^4.0.5",
     "concurrently": "^4.1.2",
     "cross-env": "^6.0.0",
-    "electron": "^6.0.10",
-    "electron-builder": "^21.2.0",
+    "electron": "^7.1.9",
+    "electron-builder": "^22.2.0",
     "mocha-steps": "^1.3.0",
     "node-sass": "^4.13.1",
     "react-scripts": "^3.1.2",
     "simple-semantic-config": "^6.1.0",
+    "tamper-version": "^1.0.1",
     "typescript": "3.6.3",
     "wait-on": "^3.3.0"
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
-  "release": {
-    "branches": [
-      {
-        "name": "master", "prerelease": true
-      }
-    ]
-  }
+  "browserslist": "electron 1.6"
 }

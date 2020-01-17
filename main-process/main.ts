@@ -1,5 +1,4 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
-import log from 'electron-log';
 import path from 'path';
 import MtsParser from "./MtsParser";
 
@@ -9,6 +8,7 @@ let mainWindow: any;
 
 const args = process.argv.slice(1);
 const devMode = args.some((val) => val === '--serve');
+const debugMode = args.some((val) => val === '--debug');
 
 function createWindow() {
     const iconUrl = url.format({
@@ -36,7 +36,7 @@ function createWindow() {
 
     mainWindow.on("closed", () => (mainWindow = null));
 
-    if (devMode) {
+    if (debugMode) {
         mainWindow.openDevTools({mode: 'detach'});
     }
 }
