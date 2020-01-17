@@ -14,12 +14,12 @@ jobs:
           name: upgrade-node
           command: |
             .circleci/upgrade-node.sh
-            npm install -g yarn
       - run:
           name: initialize
           command: |
             sudo chmod -R a+w /usr/local
             mkdir ci-artifacts
+            npm install -g yarn
       - run:
           name: npm-deps
           command: yarn --frozen-lockfile

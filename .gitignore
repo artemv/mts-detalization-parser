@@ -3,4 +3,5 @@ package-lock.json
 dist/
 build/
 .idea/
-**/*.js*
+**/*.js
+**/*.js.map
