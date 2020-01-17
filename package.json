@@ -99,7 +99,7 @@
     "mocha-steps": "^1.3.0",
     "node-sass": "^4.13.1",
     "react-scripts": "^3.1.2",
-    "simple-semantic-config": "^6.0.16",
+    "simple-semantic-config": "^6.1.0",
     "typescript": "3.6.3",
     "wait-on": "^3.3.0"
   },
@@ -113,6 +113,13 @@
       "last 1 chrome version",
       "last 1 firefox version",
       "last 1 safari version"
+    ]
+  },
+  "release": {
+    "branches": [
+      {
+        "name": "master", "prerelease": true
+      }
     ]
   }
 }
