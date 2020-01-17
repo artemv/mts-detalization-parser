@@ -105,7 +105,6 @@ jobs:
           name: release
           command: |
             if [[ "${CIRCLE_PROJECT_USERNAME}" == "artemv" ]]; then yarn semantic-release; fi
-            yarn dist:linux --publish always
             docker run --rm -ti \
              --env-file <(env | egrep 'DEBUG|NODE_|ELECTRON_|YARN_|NPM_|CI|CIRCLE|TRAVIS_TAG|TRAVIS|TRAVIS_REPO_|TRAVIS_BUILD_|TRAVIS_BRANCH|TRAVIS_PULL_REQUEST_|APPVEYOR_|CSC_|GH_|GITHUB_|BT_|AWS_|STRIP|BUILD_') \
              --env ELECTRON_CACHE="/root/.cache/electron" \
@@ -114,7 +113,7 @@ jobs:
              -v ${PWD}/node_modules:/project/node_modules \
              -v ~/.cache/electron:/root/.cache/electron \
              -v ~/.cache/electron-builder:/root/.cache/electron-builder \
-             electronuserland/builder:wine yarn dist:windows --publish=always
+             electronuserland/builder:wine yarn electron-builder build --windows --linux --ia32 --x64 --publish=always
             cp dist/*.AppImage ci-artifacts/
             cp dist/*.exe ci-artifacts/
       - save_cache:
