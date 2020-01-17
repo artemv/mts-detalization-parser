@@ -37,6 +37,9 @@
       "main-process/**"
     ],
     "linux": {
+      "target": [
+        "AppImage"
+      ],
       "executableName": "mts-detalization-parser",
       "artifactName": "${productName}-${version}.${ext}"
     },
