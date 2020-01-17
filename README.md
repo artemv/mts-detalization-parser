@@ -3,9 +3,12 @@
 # mts-detalization-parser
 Парсер PDF файлов детализации оператора сотовой связи МТС. На данный момент показывает только сумму по трафику. 
 
+## Установка
+[Для Windows](https://github.com/artemv/mts-detalization-parser/releases/download/v1.0.3-win/MtsDetalizationParser-Setup-1.0.3-win.exe) и [для Linux](https://github.com/artemv/mts-detalization-parser/releases/download/v1.0.3-linux/MtsDetalizationParser-1.0.3-linux.AppImage) есть установщики, скачай и запусти. Для MacOS придется собрать установщик самому, см. раздел Development. 
+ 
 ## Лог файл
 
-Здесь:
+Лог файл пишется сюда:
 * Linux: ~/.config/MtsDetalizationParser/main.log
 * OS X: ~/Library/Logs/MtsDetalizationParser/main.log
 * Windows: %USERPROFILE%\AppData\Roaming\MtsDetalizationParser\main.log
