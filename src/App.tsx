@@ -1,7 +1,7 @@
 import path from 'path';
 import React from 'react';
 // @ts-ignore
-import { Container, Row, Button } from "shards-react";
+import { Container, Row } from "shards-react";
 import "../node_modules/bootstrap/scss/bootstrap.scss";
 import "../node_modules/shards-ui/src/scss/shards.scss";
 
