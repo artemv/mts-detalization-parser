@@ -1,9 +1,6 @@
 import path from 'path';
 import React from 'react';
-// @ts-ignore
-import { Container, Row } from "shards-react";
 import "../node_modules/bootstrap/scss/bootstrap.scss";
-import "../node_modules/shards-ui/src/scss/shards.scss";
 
 const log = window.require('electron-log');
 const ipcRenderer = window.require('electron').ipcRenderer;
@@ -51,8 +48,8 @@ export default class App extends React.Component<IProps, IState> {
 
     render() {
         return (
-            <Container>
-                <Row>
+            <div className="container">
+                <div className="row">
                     <div className="col-md-6 pl-0">
                         <h6 className="text-muted mb-3">Выберите PDF файл детализации</h6>
                         <fieldset>
@@ -64,8 +61,8 @@ export default class App extends React.Component<IProps, IState> {
                         </fieldset>
                         {this.state.results}
                     </div>
-                </Row>
-            </Container>
+                </div>
+            </div>
         );
     }
 }

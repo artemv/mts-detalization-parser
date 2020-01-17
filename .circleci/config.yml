@@ -105,8 +105,10 @@ jobs:
           name: release
           command: |
             if [[ "${CIRCLE_PROJECT_USERNAME}" == "artemv" ]]; then yarn semantic-release; fi
-            yarn tamper-version binaries
+            yarn tamper-version linux
             yarn dist:linux --publish always
+            cp package.json.bak package.json
+            yarn tamper-version win
             docker run --rm -ti \
              --env-file <(env | egrep 'DEBUG|NODE_|ELECTRON_|YARN_|NPM_|CI|CIRCLE|TRAVIS_TAG|TRAVIS|TRAVIS_REPO_|TRAVIS_BUILD_|TRAVIS_BRANCH|TRAVIS_PULL_REQUEST_|APPVEYOR_|CSC_|GH_|GITHUB_|BT_|AWS_|STRIP|BUILD_') \
              --env ELECTRON_CACHE="/root/.cache/electron" \
