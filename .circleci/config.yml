@@ -1,0 +1,148 @@
+defaults: &defaults
+  machine: true
+  working_directory: /home/circleci/project
+
+version: 2
+jobs:
+  test:
+    <<: *defaults
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum ".circleci/deps-cache-version" }}-{{ checksum "package.json" }}
+      - run:
+          name: upgrade-node
+          command: |
+            .circleci/upgrade-node.sh
+      - run:
+          name: initialize
+          command: |
+            sudo chmod -R a+w /usr/local
+            mkdir ci-artifacts
+      - run:
+          name: npm-deps
+          command: yarn --frozen-lockfile
+      - run:
+          name: build
+          command: yarn react-build
+      - run:
+          name: collect-artifacts
+          command: |
+            (cp ~/.config/MtsDetalizationParser/log.log ci-artifacts/app-log.txt) || true
+            (cp ~/.npm/_logs/*.log ci-artifacts) || true
+          when: always
+      - save_cache:
+          key: dependency-cache-{{ checksum ".circleci/deps-cache-version" }}-{{ checksum "package.json" }}
+          paths:
+            - node_modules
+            - ~/.npm
+            - package-lock.json
+            - ~/.cache
+          when: always
+      - store_artifacts:
+          path: ci-artifacts/
+      - persist_to_workspace:
+          root: /home/circleci
+          paths:
+            - TestSuite
+
+  build-binaries:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: /home/circleci
+      - restore_cache:
+          key: electron-deps-{{ checksum ".circleci/electron-cache-version" }}
+      - run:
+          name: upgrade-node
+          command: |
+            .circleci/upgrade-node.sh
+      - run:
+          name: initialize
+          command: |
+            npm run ci-tools-install
+            ci-tools-upgrade-yarn
+      - run:
+          name: build-binaries
+          command: |
+            yarn simple-semantic-release-pre
+            yarn dist:linux
+            docker run --rm -ti \
+             --env-file <(env | egrep 'DEBUG|NODE_|ELECTRON_|YARN_|NPM_|CI|CIRCLE|TRAVIS_TAG|TRAVIS|TRAVIS_REPO_|TRAVIS_BUILD_|TRAVIS_BRANCH|TRAVIS_PULL_REQUEST_|APPVEYOR_|CSC_|GH_|GITHUB_|BT_|AWS_|STRIP|BUILD_') \
+             --env ELECTRON_CACHE="/root/.cache/electron" \
+             --env ELECTRON_BUILDER_CACHE="/root/.cache/electron-builder" \
+             -v ${PWD}:/project \
+             -v ${PWD}/node_modules:/project/node_modules \
+             -v ~/.cache/electron:/root/.cache/electron \
+             -v ~/.cache/electron-builder:/root/.cache/electron-builder \
+             electronuserland/builder:wine yarn dist:windows
+            cp dist/*.AppImage ci-artifacts/
+            cp dist/*.exe ci-artifacts/
+            cp dist/*.exe ci-artifacts/
+      - save_cache:
+          key: electron-deps-{{ checksum ".circleci/electron-cache-version" }}
+          paths:
+            - ~/.cache
+          when: always
+      - store_artifacts:
+          path: ci-artifacts/
+
+  release:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: /home/circleci
+      - restore_cache:
+          key: electron-deps-{{ checksum ".circleci/electron-cache-version" }}
+      - run:
+          name: upgrade-node
+          command: |
+            .circleci/upgrade-node.sh
+      - run:
+          name: initialize
+          command: |
+            npm run ci-tools-install
+            ci-tools-upgrade-yarn
+      - run:
+          name: release
+          command: |
+            if [[ "${CIRCLE_PROJECT_USERNAME}" == "artemv" ]]; then yarn semantic-release; fi
+            yarn dist:linux --publish always
+            docker run --rm -ti \
+             --env-file <(env | egrep 'DEBUG|NODE_|ELECTRON_|YARN_|NPM_|CI|CIRCLE|TRAVIS_TAG|TRAVIS|TRAVIS_REPO_|TRAVIS_BUILD_|TRAVIS_BRANCH|TRAVIS_PULL_REQUEST_|APPVEYOR_|CSC_|GH_|GITHUB_|BT_|AWS_|STRIP|BUILD_') \
+             --env ELECTRON_CACHE="/root/.cache/electron" \
+             --env ELECTRON_BUILDER_CACHE="/root/.cache/electron-builder" \
+             -v ${PWD}:/project \
+             -v ${PWD}/node_modules:/project/node_modules \
+             -v ~/.cache/electron:/root/.cache/electron \
+             -v ~/.cache/electron-builder:/root/.cache/electron-builder \
+             electronuserland/builder:wine yarn dist:windows --publish=always
+            cp dist/*.AppImage ci-artifacts/
+            cp dist/*.exe ci-artifacts/
+      - save_cache:
+          key: electron-deps-{{ checksum ".circleci/electron-cache-version" }}
+          paths:
+            - ~/.cache
+          when: always
+      - store_artifacts:
+          path: ci-artifacts/
+workflows:
+  version: 2
+  main:
+    jobs:
+      - test:
+          context: org-global
+      - build-binaries:
+          requires:
+            - test
+          context: org-global
+          filters:
+            branches:
+              ignore: master
+      - release:
+          requires:
+            - test
+          context: org-global
+          filters:
+            branches:
+              only: master
