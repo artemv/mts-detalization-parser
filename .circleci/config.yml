@@ -61,8 +61,7 @@ jobs:
       - run:
           name: initialize
           command: |
-            npm run ci-tools-install
-            ci-tools-upgrade-yarn
+            npm install -g yarn
       - run:
           name: build-binaries
           command: |
@@ -78,7 +77,6 @@ jobs:
              -v ~/.cache/electron-builder:/root/.cache/electron-builder \
              electronuserland/builder:wine yarn dist:windows
             cp dist/*.AppImage ci-artifacts/
-            cp dist/*.exe ci-artifacts/
             cp dist/*.exe ci-artifacts/
       - save_cache:
           key: electron-deps-{{ checksum ".circleci/electron-cache-version" }}
@@ -102,8 +100,7 @@ jobs:
       - run:
           name: initialize
           command: |
-            npm run ci-tools-install
-            ci-tools-upgrade-yarn
+            npm install -g yarn
       - run:
           name: release
           command: |
