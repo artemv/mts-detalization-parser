@@ -12,7 +12,7 @@
  
 ## Development
 
-Install Node 8.12.0+ and Yarn 1.10.1+.
+Install Node 13.4.0+ and Yarn 1.10.1+.
 
 Clone this repository locally :
 

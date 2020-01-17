@@ -8,7 +8,7 @@ fi
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
 if [ "${NODE_VERSION}" == "" ]; then
-  NODE_VERSION="8.12.0"
+  NODE_VERSION="13.4.0"
 fi
 nvm install v${NODE_VERSION}
 nvm alias default v${NODE_VERSION}
