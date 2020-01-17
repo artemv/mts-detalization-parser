@@ -129,18 +129,18 @@ workflows:
   main:
     jobs:
       - test:
-          context: org-global
+          context: my npm-based projects
       - build-binaries:
           requires:
             - test
-          context: org-global
+          context: my npm-based projects
           filters:
             branches:
               ignore: master
       - release:
           requires:
             - test
-          context: org-global
+          context: my npm-based projects
           filters:
             branches:
               only: master
