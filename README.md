@@ -48,4 +48,3 @@ Now you can use your Electron app in a local development environment.
 ## License
 
 MIT © [Artem Vasiliev](https://github.com/artemv)
-
