@@ -97,7 +97,11 @@ export default class MtsParser {
                     break;
                 }
                 case 'kind': {
-                    nextLineKind = 'amount';
+                    if (block.kind === 'ch' && line === 'ch') {
+                        skipNextLine = true;
+                    } else {
+                        nextLineKind = 'amount';
+                    }
                     break;
                 }
                 case 'amount': {
