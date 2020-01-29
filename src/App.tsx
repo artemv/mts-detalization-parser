@@ -41,7 +41,7 @@ export default class App extends React.Component<IProps, IState> {
             if (fileName.length > MAX_LEN + 3) {
                 slicedFn = '...' + fileName.slice(fileName.length - MAX_LEN);
             }
-            ipcRenderer.send('process-file', file.path);
+            ipcRenderer.send('process-file', file.path, '2020-01-26');
             this.setState({fileHint: slicedFn});
         }
     }

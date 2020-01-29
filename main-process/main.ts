@@ -41,8 +41,8 @@ function createWindow() {
     }
 }
 
-ipcMain.on('process-file', async (event, filePath) => {
-    let runner = new MtsParser(filePath);
+ipcMain.on('process-file', async (event, filePath, fromDate) => {
+    let runner = new MtsParser(filePath, fromDate);
     let res = await runner.run();
     event.sender.send('results', {total: res})
 });

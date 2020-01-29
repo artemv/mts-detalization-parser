@@ -74,12 +74,13 @@
     "electron-build": "electron-builder",
     "release": "yarn react-build && electron-builder --windows --windows --mac --linux --publish=always",
     "build": "yarn react-build && electron-builder --windows --mac --linux",
-    "start": "concurrently \"cross-env BROWSER=none yarn react-start\" \"wait-on http://localhost:3000 && electron . --serve\""
+    "start": "concurrently \"cross-env BROWSER=none yarn react-start\" \"wait-on http://localhost:3000 && electron . --serve --debug\""
   },
   "eslintConfig": {
     "extends": "react-app"
   },
   "dependencies": {
+    "@js-joda/core": "^2.0.0",
     "bootstrap": "^4.4.1",
     "electron-log": "^4.0.3",
     "pdf-parse": "^1.1.1",
