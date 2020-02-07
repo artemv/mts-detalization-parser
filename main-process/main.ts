@@ -1,14 +1,19 @@
+import log from 'electron-log';
 import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'path';
+import isDev from "electron-is-dev";
+import url from 'url';
+
 import MtsParser from "./MtsParser";
 
-const url = require('url');
 
 let mainWindow: any;
 
 const args = process.argv.slice(1);
-const devMode = args.some((val) => val === '--serve');
+const devMode = isDev;
 const debugMode = args.some((val) => val === '--debug');
+
+log.debug('hello', {devMode, debugMode});
 
 function createWindow() {
     const iconUrl = url.format({

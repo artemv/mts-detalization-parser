@@ -4716,6 +4716,16 @@ electron-builder@^22.2.0:
     update-notifier "^3.0.1"
     yargs "^15.0.2"
 
+electron-is-dev@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/electron-is-dev/-/electron-is-dev-1.1.0.tgz#b15a2a600bdc48a51a857d460e05f15b19a2522c"
+  integrity sha512-Z1qA/1oHNowGtSBIcWk0pcLEqYT/j+13xUw/MYOrBUOL4X7VN0i0KCTf5SqyvMPmW5pSPKbo28wkxMxzZ20YnQ==
+
+electron-isDev@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/electron-isDev/-/electron-isDev-0.1.0.tgz#056d3762a6a9c4e9e6dce470d131bf8d656a3998"
+  integrity sha1-BW03YqapxOnm3ORw0TG/jWVqOZg=
+
 electron-log@^4.0.3:
   version "4.0.3"
   resolved "https://registry.yarnpkg.com/electron-log/-/electron-log-4.0.3.tgz#c998ebf6d4d0c0b017795639d0bc00eb51b39b30"

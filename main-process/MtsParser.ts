@@ -57,6 +57,7 @@ export default class MtsParser {
 
     private buildBlocks(rawData) {
         let lines = rawData.text.split("\n");
+        log.info('lines', lines);
         let nextLineKind: string | null = null;
         let trafficBlocks: any[] = [];
         let otherBlocks: any[] = [];
