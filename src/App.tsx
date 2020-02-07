@@ -1,6 +1,6 @@
 import path from 'path';
 import React from 'react';
-import "../node_modules/bootstrap/scss/bootstrap.scss";
+import "bootstrap/scss/bootstrap.scss";
 
 const log = window.require('electron-log');
 const ipcRenderer = window.require('electron').ipcRenderer;
