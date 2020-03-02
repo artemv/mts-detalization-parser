@@ -1,7 +1,5 @@
 import log from 'electron-log';
 import {LocalDateTime, LocalDate, DateTimeFormatter, TemporalQueries} from "@js-joda/core";
-const fs = require('fs');
-const pdf = require('pdf-parse');
 
 class Parser {
     parseDateTime(dateTime: string): LocalDateTime {
@@ -26,38 +24,19 @@ class Parser {
     }
 }
 
-interface ReportBlock{
-    time: any;
-    amount: any;
-}
-
 export default class MtsParser {
-    private filePath: string;
-    private fromDate: LocalDate;
     private parser = new Parser();
 
-    constructor(filePath: string, fromDate: string) {
-        this.filePath = filePath;
-        this.fromDate = LocalDate.parse(fromDate);
-    }
-
-    async run() {
-        let {trafficBlocks} = await this.parseFile();
-        trafficBlocks = trafficBlocks.filter((b) => b.time >= this.fromDate);
+    async run(pdfText: string, fromDate: string): Promise<number> {
+        let fromDate1 = LocalDate.parse(fromDate);
+        let {trafficBlocks} = await this.buildBlocks(pdfText);
+        trafficBlocks = trafficBlocks.filter((b) => b.time >= fromDate1);
         log.info('trafficBlocks', trafficBlocks);
-        return trafficBlocks.reduce((acc, b) => acc + b.amount, 0);
+        return Math.round(trafficBlocks.reduce((acc, b) => acc + b.amount, 0));
     }
 
-    private async parseFile():Promise<{otherBlocks: ReportBlock[], trafficBlocks: ReportBlock[]}> {
-        let dataBuffer = fs.readFileSync(this.filePath);
-        let rawData = await pdf(dataBuffer);
-
-        return this.buildBlocks(rawData);
-    }
-
-    private buildBlocks(rawData) {
-        let lines = rawData.text.split("\n");
-        log.info('lines', lines);
+    public buildBlocks(text: string) {
+        let lines = text.split("\n");
         let nextLineKind: string | null = null;
         let trafficBlocks: any[] = [];
         let otherBlocks: any[] = [];

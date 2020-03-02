@@ -19,7 +19,7 @@
     ]
   },
   "include": [
-    "public/electron.ts"
+    "../public/electron.ts"
   ],
   "exclude": [
     "node_modules",
