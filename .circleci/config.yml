@@ -61,7 +61,7 @@ jobs:
       - run:
           name: test-binary
           command: |
-            USE_MAC_BINARY=true yarn e2e --grep="creates initial windows"
+            USE_MAC_BINARY=true yarn e2e
       - run:
           name: collect-artifacts
           command: |

@@ -64,9 +64,9 @@
     "preinstall": "yarn check-local-node-version",
     "prestart": "yarn check-local-node-version",
     "check-local-node-version": "npx check-node-version --node $(cat .local-node-version)",
-    "pack": "electron-builder --mwl",
+    "pack": "electron-builder -mwl",
     "build-mainproc": "tsc -p main-process/tsconfig.json",
-    "dist": "electron-builder --mwl",
+    "dist": "electron-builder -mwl",
     "dist:linux": "yarn electron-builder build --linux --x64",
     "dist:windows": "yarn electron-builder build --windows --ia32 --x64",
     "dist:mac": "yarn electron-builder build --mac --x64",
@@ -78,7 +78,8 @@
     "release": "yarn react-build && electron-builder --windows --windows --mac --linux --publish=always",
     "build": "yarn react-build && electron-builder --windows --mac --linux",
     "start": "concurrently \"cross-env BROWSER=none yarn react-start\" \"wait-on http://localhost:3000 && electron . --serve --debug\"",
-    "test": "TS_NODE_PROJECT=test/tsconfig.json nyc ava test/**/*.test.ts"
+    "test": "TS_NODE_PROJECT=test/tsconfig.json nyc ava test/**/*.test.ts",
+    "e2e": "TS_NODE_PROJECT=e2e/tsconfig.json ava e2e/**/*.test.ts"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -111,6 +112,7 @@
     "nyc": "^15.0.0",
     "react-scripts": "^3.1.2",
     "simple-semantic-config": "^6.1.0",
+    "spectron": "^9.0.0",
     "tamper-version": "^1.1.3",
     "ts-node": "^8.6.2",
     "typescript": "3.6.3",

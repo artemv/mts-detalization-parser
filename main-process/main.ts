@@ -3,10 +3,10 @@ import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'path';
 import isDev from "electron-is-dev";
 import url from 'url';
-const fs = require('fs');
-const pdf = require('pdf-parse');
 
 import MtsParser from "./MtsParser";
+const fs = require('fs');
+const pdf = require('pdf-parse');
 
 
 let mainWindow: any;
