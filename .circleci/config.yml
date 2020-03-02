@@ -50,7 +50,7 @@ jobs:
           name: build-binaries
           command: |
             git checkout master
-            git reset --hard ${CIRCLE_BRANCH}
+            git reset --hard ${CIRCLE_SHA1}
             touch build/.version
             BRANCH=master CIRCLE_BRANCH=master yarn simple-semantic-release-pre
             if [[ "$(cat build/.version)" != "" ]]; then
