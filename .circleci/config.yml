@@ -65,7 +65,7 @@ jobs:
       - run:
           name: collect-artifacts
           command: |
-            cp ~/Library/Logs/MtsDetalizationParser/log.log ci-artifacts/app-log.txt
+            cp ~/Library/Logs/MtsDetalizationParser/main.log ci-artifacts/app-log.txt
             (cp dist/*.AppImage ci-artifacts/) || true
             (cp dist/*.exe ci-artifacts/) || true
             (cp dist/*.dmg ci-artifacts/) || true
