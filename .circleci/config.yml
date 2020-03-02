@@ -88,7 +88,7 @@ jobs:
       - run:
           name: release
           command: |
-            if [[ "${CIRCLE_PROJECT_USERNAME}" == "egis" ]]; then yarn semantic-release; fi
+            if [[ "${CIRCLE_PROJECT_USERNAME}" == "artemv" ]]; then yarn semantic-release; fi
             if [[ "${PUBLISH_VERSION}" != "" ]]; then
               yarn tamper-version "${PUBLISH_VERSION}" --full
             fi
