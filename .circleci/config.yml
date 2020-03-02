@@ -1,6 +1,7 @@
 defaults: &defaults
-  machine: true
-  working_directory: /home/circleci/project
+  macos:
+    xcode: 11.3.1
+    working_directory: /Users/distiller/project
 
 version: 2
 jobs:
@@ -11,15 +12,11 @@ jobs:
       - restore_cache:
           key: dependency-cache-{{ checksum ".circleci/deps-cache-version" }}-{{ checksum "package.json" }}
       - run:
-          name: upgrade-node
-          command: |
-            .circleci/upgrade-node.sh
-      - run:
           name: initialize
           command: |
-            sudo chmod -R a+w /usr/local
+            node --version
+            yarn --version
             mkdir ci-artifacts
-            npm install -g yarn
       - run:
           name: npm-deps
           command: yarn --frozen-lockfile
@@ -27,12 +24,6 @@ jobs:
           name: build
           command: yarn react-build
       - run: yarn test
-      - run:
-          name: collect-artifacts
-          command: |
-            (cp ~/.config/MtsDetalizationParser/log.log ci-artifacts/app-log.txt) || true
-            (cp ~/.npm/_logs/*.log ci-artifacts) || true
-          when: always
       - save_cache:
           key: dependency-cache-{{ checksum ".circleci/deps-cache-version" }}-{{ checksum "package.json" }}
           paths:
@@ -44,7 +35,7 @@ jobs:
       - store_artifacts:
           path: ci-artifacts/
       - persist_to_workspace:
-          root: /home/circleci
+          root: /Users/distiller
           paths:
             - project
 
@@ -52,33 +43,33 @@ jobs:
     <<: *defaults
     steps:
       - attach_workspace:
-          at: /home/circleci
+          at: /Users/distiller
       - restore_cache:
           key: electron-deps-{{ checksum ".circleci/electron-cache-version" }}
       - run:
-          name: upgrade-node
-          command: |
-            .circleci/upgrade-node.sh
-      - run:
-          name: initialize
-          command: |
-            npm install -g yarn
-      - run:
           name: build-binaries
           command: |
-            yarn simple-semantic-release-pre
-            yarn dist:linux
-            docker run --rm -ti \
-             --env-file <(env | egrep 'DEBUG|NODE_|ELECTRON_|YARN_|NPM_|CI|CIRCLE|TRAVIS_TAG|TRAVIS|TRAVIS_REPO_|TRAVIS_BUILD_|TRAVIS_BRANCH|TRAVIS_PULL_REQUEST_|APPVEYOR_|CSC_|GH_|GITHUB_|BT_|AWS_|STRIP|BUILD_') \
-             --env ELECTRON_CACHE="/root/.cache/electron" \
-             --env ELECTRON_BUILDER_CACHE="/root/.cache/electron-builder" \
-             -v ${PWD}:/project \
-             -v ${PWD}/node_modules:/project/node_modules \
-             -v ~/.cache/electron:/root/.cache/electron \
-             -v ~/.cache/electron-builder:/root/.cache/electron-builder \
-             electronuserland/builder:wine yarn dist:windows
-            cp dist/*.AppImage ci-artifacts/
-            cp dist/*.exe ci-artifacts/
+            git checkout master
+            git reset --hard ${CIRCLE_BRANCH}
+            touch build/.version
+            BRANCH=master CIRCLE_BRANCH=master yarn simple-semantic-release-pre
+            if [[ "$(cat build/.version)" != "" ]]; then
+              yarn tamper-version "$(cat build/.version)-pre" --full
+            fi
+            yarn tamper-version "$(git rev-parse --short HEAD)"
+            yarn dist --publish=never
+      - run:
+          name: test-binary
+          command: |
+            USE_MAC_BINARY=true yarn e2e --grep="creates initial windows"
+      - run:
+          name: collect-artifacts
+          command: |
+            cp ~/Library/Logs/MtsDetalizationParser/log.log ci-artifacts/app-log.txt
+            (cp dist/*.AppImage ci-artifacts/) || true
+            (cp dist/*.exe ci-artifacts/) || true
+            (cp dist/*.dmg ci-artifacts/) || true
+          when: always
       - save_cache:
           key: electron-deps-{{ checksum ".circleci/electron-cache-version" }}
           paths:
@@ -91,32 +82,24 @@ jobs:
     <<: *defaults
     steps:
       - attach_workspace:
-          at: /home/circleci
+          at: /Users/distiller
       - restore_cache:
           key: electron-deps-{{ checksum ".circleci/electron-cache-version" }}
       - run:
-          name: upgrade-node
-          command: |
-            .circleci/upgrade-node.sh
-      - run:
-          name: initialize
-          command: |
-            npm install -g yarn
-      - run:
           name: release
           command: |
-            if [[ "${CIRCLE_PROJECT_USERNAME}" == "artemv" ]]; then yarn semantic-release; fi
-            docker run --rm -ti \
-             --env-file <(env | egrep 'DEBUG|NODE_|ELECTRON_|YARN_|NPM_|CI|CIRCLE|TRAVIS_TAG|TRAVIS|TRAVIS_REPO_|TRAVIS_BUILD_|TRAVIS_BRANCH|TRAVIS_PULL_REQUEST_|APPVEYOR_|CSC_|GH_|GITHUB_|BT_|AWS_|STRIP|BUILD_') \
-             --env ELECTRON_CACHE="/root/.cache/electron" \
-             --env ELECTRON_BUILDER_CACHE="/root/.cache/electron-builder" \
-             -v ${PWD}:/project \
-             -v ${PWD}/node_modules:/project/node_modules \
-             -v ~/.cache/electron:/root/.cache/electron \
-             -v ~/.cache/electron-builder:/root/.cache/electron-builder \
-             electronuserland/builder:wine yarn electron-builder build --windows --linux --ia32 --x64 --publish=always
-            cp dist/*.AppImage ci-artifacts/
-            cp dist/*.exe ci-artifacts/
+            if [[ "${CIRCLE_PROJECT_USERNAME}" == "egis" ]]; then yarn semantic-release; fi
+            if [[ "${PUBLISH_VERSION}" != "" ]]; then
+              yarn tamper-version "${PUBLISH_VERSION}" --full
+            fi
+            yarn dist --publish=always
+      - run:
+          name: copy-binaries
+          command: |
+            (cp dist/*.AppImage ci-artifacts/) || true
+            (cp dist/*.exe ci-artifacts/) || true
+            (cp dist/*.dmg ci-artifacts/) || true
+          when: always
       - save_cache:
           key: electron-deps-{{ checksum ".circleci/electron-cache-version" }}
           paths:
@@ -124,6 +107,7 @@ jobs:
           when: always
       - store_artifacts:
           path: ci-artifacts/
+
 workflows:
   version: 2
   main:
