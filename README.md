@@ -4,7 +4,7 @@
 Парсер PDF файлов детализации оператора сотовой связи МТС. На данный момент показывает только сумму по трафику. 
 
 ## Установка
-Для Windows и Linux есть [установщики](https://github.com/artemv/mts-detalization-parser/releases/). Для MacOS придется собрать установщик самому, см. раздел Development. 
+Установщики для Windows, MacOS и Linux - [тут](https://github.com/artemv/mts-detalization-parser/releases/). 
  
 ## Лог файл
 
