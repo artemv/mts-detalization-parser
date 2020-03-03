@@ -4,6 +4,7 @@ dist/
 build/
 .idea/
 src/**/*.js
+!src/**/.eslintrc.js
 src/**/*.js.map
 main-process/**/*.js
 main-process/**/*.js.map

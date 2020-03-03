@@ -24,6 +24,10 @@ jobs:
           name: build
           command: yarn react-build
       - run: yarn test
+      - run:
+          name: lint
+          command: yarn lint
+          when: always
       - save_cache:
           key: dependency-cache-{{ checksum ".circleci/deps-cache-version" }}-{{ checksum "package.json" }}
           paths:

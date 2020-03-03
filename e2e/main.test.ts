@@ -1,10 +1,10 @@
-import { commonSetup } from './common';
-const test = require('ava');
+import test from 'ava';
+import {commonSetup} from './common';
 
 commonSetup(test);
 
 test('Basic test', async (t) => {
-    const browser = t.context.app.client;
-    const count = await browser.getWindowCount();
-    t.is(count, 1, "initial windows count");
+  const browser = (t.context as any).app.client;
+  const count = await browser.getWindowCount();
+  t.is(count, 1, "initial windows count");
 });
