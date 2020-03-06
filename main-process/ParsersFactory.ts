@@ -7,7 +7,7 @@ import SkylinkParser from "./SkylinkParser";
 
 export default class ParsersFactory {
 
-  static async createByPdfData(dataBuffer: Buffer): Promise<any> {
+  static async createByPdfData(dataBuffer: Buffer): Promise<Parser> {
     const items = [];
     let klass;
     await pdf(dataBuffer, {

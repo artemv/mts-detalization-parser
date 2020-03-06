@@ -4,7 +4,6 @@ import path from 'path';
 import isDev from "electron-is-dev";
 import fs from 'fs';
 import ParsersFactory from "./ParsersFactory";
-import {Parser} from "./constants";
 
 let mainWindow: any;
 
@@ -40,7 +39,7 @@ function createWindow(): void {
 
 ipcMain.on('process-file', async (event, filePath, fromDate) => {
   const dataBuffer = fs.readFileSync(filePath);
-  const parser: Parser = await ParsersFactory.createByPdfData(dataBuffer);
+  const parser = await ParsersFactory.createByPdfData(dataBuffer);
   const res = parser.run(fromDate);
   event.sender.send('results', {total: res})
 });

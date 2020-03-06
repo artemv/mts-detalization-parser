@@ -15,7 +15,7 @@ export default class SkylinkParser implements Parser {
       if (item.str.startsWith('Трафик:')) {
         const r = item.str.split('Трафик:')[1];
         const am = r.split(' ')[0];
-        let am1 = Number(am) / 1000000;
+        const am1 = Number(am) / 1000000;
         log.debug('parsed tr block', Math.round(am1 * 100) / 100, item);
         res += am1;
       }
