@@ -20,6 +20,7 @@ export default class App extends React.Component<{}, State> {
 
     ipcRenderer.on('results', (event: any, data: any) => {
 
+      log.info('App got results', data);
       this.setState({results: `Всего: ${Math.round(data.total)}Mb`});
 
     });

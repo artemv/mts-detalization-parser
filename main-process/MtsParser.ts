@@ -1,12 +1,13 @@
 import log from 'electron-log';
 import {LocalDateTime, LocalDate, DateTimeFormatter, TemporalQueries} from "@js-joda/core";
+import {Parser} from "./constants";
 
 interface Blocks {
   otherBlocks: Record<string, any>[];
   trafficBlocks: Record<string, any>[];
 }
 
-class Parser {
+class MyParser {
   parseDateTime(dateTime: string): LocalDateTime {
     dateTime = dateTime.replace(/\s+/g, ' ');
     const FORMATTER = DateTimeFormatter.ofPattern(
@@ -29,12 +30,19 @@ class Parser {
   }
 }
 
-export default class MtsParser {
-  private parser = new Parser();
+export default class MtsParser implements Parser {
+  private parser = new MyParser();
+  private items: any[];
 
-  run(pdfText: string, fromDate: string): number {
+  constructor(items: any[]) {
+    this.items = items;
+    log.debug('MtsParser items', JSON.stringify(items));
+  }
+
+  run(fromDate: string): number {
+    throw new Error('MtsParser.run');
     const fromDate1 = LocalDate.parse(fromDate);
-    let {trafficBlocks} = this.buildBlocks(pdfText);
+    let {trafficBlocks} = this.buildBlocks('');
     trafficBlocks = trafficBlocks.filter((b) => b.time >= fromDate1);
     log.info('trafficBlocks', trafficBlocks);
     return Math.round(trafficBlocks.reduce((acc, b) => acc + b.amount, 0));

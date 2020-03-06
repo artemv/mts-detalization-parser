@@ -3,8 +3,8 @@ import {app, BrowserWindow, ipcMain} from 'electron';
 import path from 'path';
 import isDev from "electron-is-dev";
 import fs from 'fs';
-import pdf from 'pdf-parse';
-import MtsParser from "./MtsParser";
+import ParsersFactory from "./ParsersFactory";
+import {Parser} from "./constants";
 
 let mainWindow: any;
 
@@ -39,11 +39,9 @@ function createWindow(): void {
 }
 
 ipcMain.on('process-file', async (event, filePath, fromDate) => {
-  const runner = new MtsParser();
   const dataBuffer = fs.readFileSync(filePath);
-  const rawData = await pdf(dataBuffer);
-  log.debug('parsed PDF text', rawData.text);
-  const res = await runner.run(rawData.text, fromDate);
+  const parser: Parser = await ParsersFactory.createByPdfData(dataBuffer);
+  const res = parser.run(fromDate);
   event.sender.send('results', {total: res})
 });
 
